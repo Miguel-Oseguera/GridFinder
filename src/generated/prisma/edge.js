@@ -107,7 +107,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/root/gridfinder/src/generated/prisma",
+      "value": "/root/gridfinder/GridFinder/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -121,12 +121,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/root/gridfinder/prisma/schema.prisma",
+    "sourceFilePath": "/root/gridfinder/GridFinder/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.16.2",
@@ -135,6 +134,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
