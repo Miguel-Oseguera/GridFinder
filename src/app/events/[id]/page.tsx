@@ -77,7 +77,7 @@ export default async function EventById({
         </p>
       )}
 
-      {(ev.start || ev.end) && (
+      {(ev.start || ev.end) && (            
         <p style={{ marginTop: 8 }}>
           {ev.start ? fmt(ev.start) : ""}{ev.end ? ` – ${fmt(ev.end)}` : ""}
         </p>

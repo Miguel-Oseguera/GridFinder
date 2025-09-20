@@ -22,49 +22,117 @@ type EventItem = {
   source?: string;
 };
 
-type Feature = GeoJSON.Feature<GeoJSON.Point, EventItem>;
-type FC = GeoJSON.FeatureCollection<GeoJSON.Point, EventItem>;
+type Feature = GeoJSON.Feature<GeoJSON.Point, EventItem & { q?: string }>;
+type FC = GeoJSON.FeatureCollection<GeoJSON.Point, EventItem & { q?: string }>;
 
 const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleString() : "");
 
-type MapProps = { dataUrl?: string };
+type SortKey = "dateAsc" | "dateDesc" | "titleAsc";
 
-// recolor helper
+type MapFilters = {
+  types?: string[] | null;
+  beginnerOnly?: boolean | null;
+  query?: string | null;
+  sortKey?: SortKey | null;
+};
+
+type MapProps = {
+  dataUrl?: string;
+  filters?: MapFilters;
+};
+
+// recolor base map
 function applyBaseColors(map: maplibregl.Map, landHex: string, waterHex: string) {
   const WATER_RE = /(water|ocean|sea|lake|river|reservoir|bay|marine)/i;
   try { map.setPaintProperty("background", "background-color", waterHex); } catch {}
   const layers = map.getStyle()?.layers ?? [];
   for (const layer of layers) {
-    const id = layer.id ?? "";
-    const sourceLayer = ((layer as any)["source-layer"] as string | undefined) ?? "";
-    const nameBlob = `${id} ${sourceLayer}`;
+    const srcLayer = ((layer as any)["source-layer"] as string | undefined) ?? "";
+    const blob = `${layer.id} ${srcLayer}`;
     if (layer.type === "fill") {
-      if (WATER_RE.test(nameBlob)) {
+      if (WATER_RE.test(blob)) {
         try { map.setPaintProperty(layer.id, "fill-color", waterHex); } catch {}
         try { map.setPaintProperty(layer.id, "fill-outline-color", waterHex); } catch {}
       } else {
         try { map.setPaintProperty(layer.id, "fill-color", landHex); } catch {}
         try { map.setPaintProperty(layer.id, "fill-outline-color", landHex); } catch {}
       }
-    } else if (layer.type === "line" && WATER_RE.test(nameBlob)) {
+    } else if (layer.type === "line" && WATER_RE.test(blob)) {
       try { map.setPaintProperty(layer.id, "line-color", waterHex); } catch {}
     }
   }
 }
 
-const toGeoJSON = (items: EventItem[]): FC => ({
-  type: "FeatureCollection",
-  features: items.map((ev) => ({
-    type: "Feature",
-    geometry: { type: "Point", coordinates: [ev.lng, ev.lat] },
-    properties: ev,
-  })),
-});
+// to GeoJSON with composite 'q' for search
+const toGeoJSON = (items: EventItem[], sortKey: SortKey = "dateAsc"): FC => {
+  const sorted = [...items];
+  const getTime = (x?: string) => (x ? new Date(x).getTime() : Number.MAX_SAFE_INTEGER);
 
-export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps) {
+  if (sortKey === "dateAsc") sorted.sort((a,b) => getTime(a.start) - getTime(b.start));
+  if (sortKey === "dateDesc") sorted.sort((a,b) => getTime(b.start) - getTime(a.start));
+  if (sortKey === "titleAsc") sorted.sort((a,b) => (a.title ?? "").localeCompare(b.title ?? ""));
+
+  return {
+    type: "FeatureCollection",
+    features: sorted.map((ev) => {
+      const q = [
+        ev.title, ev.org, ev.type, ev.venue, ev.city, ev.region, ev.country
+      ].filter(Boolean).join(" ").toLowerCase();
+      return {
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [ev.lng, ev.lat] },
+        properties: { ...ev, q },
+      };
+    }),
+  };
+};
+
+// Build layer filter expression
+function buildLayerFilter(filters?: MapFilters): any | null {
+  if (!filters) return null;
+  const parts: any[] = ["all"];
+
+  // types
+  const types = (filters.types ?? []).filter(Boolean);
+  if (types.length) {
+    parts.push(["in", ["get", "type"], ["literal", types]]);
+  }
+
+  // beginner only
+  if (filters.beginnerOnly) {
+    parts.push(["==", ["get", "beginnerFriendly"], true]);
+  }
+
+  // query (contains)
+  const q = (filters.query ?? "").trim().toLowerCase();
+  if (q.length >= 2) {
+    parts.push(["!=", ["index-of", q, ["get", "q"]], -1]);
+  }
+
+  return parts.length > 1 ? (parts as any) : null;
+}
+
+export default function Map({ dataUrl = "/data/fallback-events.json", filters }: MapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
+  const rawDataRef = useRef<EventItem[] | null>(null);
+
+  // helper to (re)apply filter
+  const applyLayerFilter = (map: maplibregl.Map) => {
+    const expr = buildLayerFilter(filters);
+    if (map.getLayer("events-points")) {
+      try { map.setFilter("events-points", expr as any); } catch {}
+    }
+  };
+
+  // helper to (re)set data (for sort changes)
+  const setSortedData = (map: maplibregl.Map) => {
+    if (!rawDataRef.current) return;
+    const sortKey = filters?.sortKey ?? "dateAsc";
+    const data = toGeoJSON(rawDataRef.current, sortKey);
+    (map.getSource("events") as maplibregl.GeoJSONSource)?.setData(data);
+  };
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -85,14 +153,17 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
     map.on("load", async () => {
       const res = await fetch(dataUrl, { cache: "no-store" });
       const items = (await res.json()) as EventItem[];
-      const data = toGeoJSON(items);
+      rawDataRef.current = items;
 
+      // init source
+      const data = toGeoJSON(items, filters?.sortKey ?? "dateAsc");
       if (!map.getSource("events")) {
         map.addSource("events", { type: "geojson", data });
       } else {
         (map.getSource("events") as maplibregl.GeoJSONSource).setData(data);
       }
 
+      // layer
       if (!map.getLayer("events-points")) {
         map.addLayer({
           id: "events-points",
@@ -112,6 +183,9 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
         });
       }
 
+      // initial filter
+      applyLayerFilter(map);
+
       map.on("mouseenter", "events-points", () => {
         map.getCanvas().style.cursor = "pointer";
       });
@@ -125,10 +199,10 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
         const p = f.properties;
         const [lng, lat] = f.geometry.coordinates;
 
-        // one popup at a time
         activePopupRef.current?.remove();
+
         const html = `
-          <div class="gf-popup-body" style="font:13px/1.35 system-ui,sans-serif;color:#121420;min-width:240px">
+          <div style="font:13px/1.35 system-ui,sans-serif;color:#121420;min-width:240px">
             <div style="font-weight:700;margin-bottom:2px;">${p.title}</div>
             <div style="font-size:12px;opacity:.85;margin-bottom:6px;">
               ${p.org ? `${p.org} · ` : ""}${p.type ?? ""}${p.beginnerFriendly ? " · Beginner" : ""}${p.sanctioned ? " · Sanctioned" : ""}
@@ -149,8 +223,8 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
           anchor: "top",
           maxWidth: "340px",
           className: "gf-popup",
-          closeButton: false,   // ← hide the “X”
-          closeOnClick: true,   // ← clicking anywhere else closes it
+          closeButton: false,
+          closeOnClick: true,
           closeOnMove: false,
           focusAfterOpen: false,
         })
@@ -158,10 +232,8 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
           .setHTML(html)
           .addTo(map);
 
-        // keep reference
         activePopupRef.current = popup;
 
-        // don’t let interactions on the popup drag/zoom the map
         const el = popup.getElement();
         ["wheel", "mousedown", "touchstart", "pointerdown"].forEach((evt) =>
           el.addEventListener(evt, (ev) => ev.stopPropagation(), { passive: true })
@@ -175,6 +247,21 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
       mapRef.current = null;
     };
   }, [dataUrl]);
+
+  // Re-apply filter when filter props change
+  useEffect(() => {
+    const m = mapRef.current;
+    if (!m) return;
+    activePopupRef.current?.remove();
+    applyLayerFilter(m);
+  }, [filters?.types, filters?.beginnerOnly, filters?.query]);
+
+  // Re-sort data when sortKey changes
+  useEffect(() => {
+    const m = mapRef.current;
+    if (!m) return;
+    setSortedData(m);
+  }, [filters?.sortKey]);
 
   return <div ref={containerRef} style={{ width: "100%", height: 520 }} />;
 }
