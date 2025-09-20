@@ -51,7 +51,7 @@ export default async function EventById({
 
   if (!ev) {
     return (
-      <main style={{ padding: 24, color: "#121420" }}>
+      <main style={{ padding: 24, color: "#AD2831" }}>
         <h1>Event not found</h1>
         <p>ID: <code>{decodeURIComponent(params.id)}</code></p>
         <p><Link href="/">← Back to map</Link></p>
@@ -60,7 +60,7 @@ export default async function EventById({
   }
 
   return (
-    <main style={{ padding: 24, color: "#121420", maxWidth: 720 }}>
+    <main style={{ padding: 24, color: "#AD2831", maxWidth: 720 }}>
       <p><Link href="/">← Back to map</Link></p>
       <h1 style={{ marginTop: 8 }}>{ev.title}</h1>
       <p style={{ marginTop: 4 }}>
@@ -95,7 +95,7 @@ export default async function EventById({
             href={ev.registerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ textDecoration: "underline", color: "#121420" }}
+            style={{ textDecoration: "underline", color: "#AD2831" }}
           >
             Register / Event site →
           </a>
