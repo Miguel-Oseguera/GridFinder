@@ -107,7 +107,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/root/gridfinder/GridFinder/src/generated/prisma",
+      "value": "/Users/reese/Desktop/projects/GridFinder/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -116,16 +116,17 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/root/gridfinder/GridFinder/prisma/schema.prisma",
+    "sourceFilePath": "/Users/reese/Desktop/projects/GridFinder/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.16.2",
@@ -134,7 +135,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
