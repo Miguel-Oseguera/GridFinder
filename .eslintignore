@@ -1,0 +1,6 @@
+node_modules
+.next
+dist
+# ignore codegen / prisma artifacts
+src/generated/
+prisma/
