@@ -6,20 +6,7 @@ export default function Home() {
   return (
     <div className="min-h-screen w-full text-white">
       {/* ===== Header placeholder (replace when assets ready) ===== */}
-      <header className="w-full bg-[var(--gf-header)] text-[#1b2432]">
-        <div className="mx-auto w-full max-w-6xl px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded bg-white/70" />
-            <h1 className="sigmar-regular text-2xl tracking-wide">GridFinder</h1>
-          </div>
-          <nav className="hidden sm:flex items-center gap-6 text-sm">
-            <span className="text-[var(--gf-red)] font-semibold">Home</span>
-            <span className="opacity-80">Beginner’s Guide</span>
-            <span className="opacity-80">Events</span>
-            <span className="opacity-80">Pro Races</span>
-          </nav>
-        </div>
-      </header>
+  
 
       {/* ===== Hero / map strip ===== */}
       <section className="mx-auto w-full max-w-6xl px-4 py-6">
