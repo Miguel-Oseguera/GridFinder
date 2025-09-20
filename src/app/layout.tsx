@@ -1,5 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import "maplibre-gl/dist/maplibre-gl.css";
+
 
 export const metadata: Metadata = {
   title: "GridFinder",

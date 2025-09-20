@@ -1,4 +1,6 @@
 import GridFinderHelper from "../components/gridFinderHelper";
+import Map from "@/components/map";
+
 
 export default function Home() {
   return (
@@ -54,14 +56,13 @@ export default function Home() {
         {/* Map + sidebar */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
           {/* ==== MAP PLACEHOLDER ==== */}
-          <div className="rounded-2xl bg-white text-[#1b2432] p-4 min-h-[420px] lg:min-h-[520px] grid place-items-center">
-            <div className="text-center">
-              <div className="sigmar-regular text-xl mb-1" style={{ color: "#ad2831" }}>
-                Interactive Map
-              </div>
-              <p className="text-sm opacity-80">
-                (placeholder) — your map component mounts here
-              </p>
+          <div className="rounded-2xl bg-white text-[#1b2432] p-4 overflow-hidden">
+            <div className="sigmar-regular text-xl mb-3" style={{ color: "#ad2831" }}>
+              Interactive Map
+            </div>
+            {/* Stable wrapper: no grid, no transforms */}
+            <div className="relative [transform:none]">
+              <Map dataUrl="/data/fallback-events.json" />
             </div>
           </div>
 
