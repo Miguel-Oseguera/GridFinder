@@ -17,6 +17,7 @@
     "date-fns": "^4.1.0",
     "ioredis": "^5.7.0",
     "leaflet": "^1.9.4",
+    "maplibre-gl": "^5.7.3",
     "next": "15.5.3",
     "prisma": "^6.16.2",
     "react": "19.1.0",
