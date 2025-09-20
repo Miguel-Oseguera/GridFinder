@@ -1,10 +1,11 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import SiteHeader from '@/components/siteHeader';
+import "./globals.css";
+import "maplibre-gl/dist/maplibre-gl.css";
+import type { Metadata } from "next";
+import SiteHeader from "@/components/siteHeader"; // match the actual filename
 
 export const metadata: Metadata = {
-  title: 'GridFinder',
-  description: 'Find karting events worldwide',
+  title: "GridFinder",
+  description: "Find karting events worldwide",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
