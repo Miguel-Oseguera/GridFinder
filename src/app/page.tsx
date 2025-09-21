@@ -60,6 +60,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full text-white">
+      {/* ===== Hero / map strip ===== */}
       <section className="mx-auto w-full max-w-6xl px-4 py-6">
         {/* Toolbar: left = Filters & Sort dropdown, right = Search */}
         <div className="mb-4 flex items-center gap-3">
@@ -131,7 +132,7 @@ export default function Home() {
                     <div className="text-sm font-semibold">Filters</div>
                     <button
                       onClick={resetAll}
-                      className="text-xs px-2 py-1 rounded bg-black/5 hover:bg-black/10"
+                      className="text-xs px-2 py-1 rounded bg_black/5 hover:bg-black/10"
                       title="Reset filters & sort"
                     >
                       Reset
@@ -282,7 +283,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ===== Content sections (restored) ===== */}
+      <section className="mx-auto w-full max-w-6xl px-4 pb-16">
+        <div className="bg-[#1b2432] rounded-xl p-6 md:p-8 mb-8">
+          <h2 className="sigmar-regular text-2xl md:text-3xl mb-3">ABOUT GRIDFINDER</h2>
+          <p className="text-sm md:text-base leading-relaxed text:white/85">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
+          </p>
+        </div>
+
+        <div className="bg-[#1b2432] rounded-xl p-6 md:p-8 mb-8">
+          <h2 className="sigmar-regular text-2xl md:text-3xl mb-3">BLAHBLAHBlAH</h2>
+          <p className="text-sm md:text-base leading-relaxed text:white/85">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit.
+          </p>
+        </div>
+
+        <div className="bg-[#1b2432] rounded-xl p-6 md:p-8 mb-10">
+          <h2 className="sigmar-regular text-2xl md:text-3xl mb-3">CONTACT US</h2>
+          <p className="text-sm md:text-base leading-relaxed text:white/85">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+          </p>
+        </div>
+      </section>
+
+      {/* ===== Footer (restored) ===== */}
       <footer className="w-full bg-[var(--gf-header)] text-[#1b2432]">
         <div className="mx-auto w-full max-w-6xl px-4 py-3 text-center text-sm opacity-80">
           Blah blah blah footer info
