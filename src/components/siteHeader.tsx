@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -15,19 +16,27 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50">
-      {/* main bar only (no extra strip underneath) */}
       <div className="h-[128px] w-full bg-[var(--gf-header)] shadow-sm">
-        <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between px-4">
-          {/* Placeholder logo + title */}
-          <div className="flex items-center gap-3">
-            <div aria-hidden className="h-10 w-10 rounded bg-white/80 ring-1 ring-black/10" />
-            <span className="sigmar-regular text-2xl tracking-wide text-[#1b2432]">
+        {/* full-bleed row: no max-w, no centering, no padding */}
+        {/* <div className="flex h-full w-full items-center justify-between"> */}
+        <div className="flex h-full w-full items-center justify-between px-4 sm:px-6">
+          {/* LEFT: logo + title flush left */}
+          <div className="flex items-center gap-3 pl-0">
+            <Image
+              src="/car.png"
+              alt="GridFinder logo"
+              width={100}
+              height={100}
+              priority
+              className="rounded"
+            />
+            <span className="sigmar-regular text-3xl tracking-wide text-[#ffffff]">
               GridFinder
             </span>
           </div>
 
-          {/* Right nav: white → red on hover/active */}
-          <nav className="flex items-center gap-6 text-lg">
+          {/* RIGHT: nav flush right */}
+          <nav className="flex items-center gap-6 text-lg pr-0">
             {NAV.map((item, i) => {
               const active =
                 item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
@@ -35,8 +44,9 @@ export default function SiteHeader() {
                 <div key={item.href} className="flex items-center">
                   <Link
                     href={item.href}
+                    aria-current={active ? 'page' : undefined}
                     className={[
-                      'transition-colors',
+                      'transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded',
                       'text-white hover:text-[var(--gf-red)]',
                       active ? 'text-[var(--gf-red)]' : '',
                     ].join(' ')}
