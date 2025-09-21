@@ -30,7 +30,7 @@ html, body {
   background: var(--gf-navy);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  min-height: 100%;
+  /* min-height: 100%; */
 }
 
 /* Sigmar for headings/titles */
@@ -39,3 +39,65 @@ html, body {
   font-weight: 400;
   font-style: normal;
 }
+<<<<<<< Updated upstream
+=======
+
+/* ===== GridFinder map popup ===== */
+.maplibregl-popup.gf-popup .maplibregl-popup-content{
+  background: rgba(255,255,255,0.88);   /* semi-transparent */
+  color:#121420;                        /* rich black text */
+  border:1px solid rgba(18,20,32,0.15);
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  padding:12px 12px 14px;
+}
+.maplibregl-popup.gf-popup .maplibregl-popup-tip{
+  border-top-color: rgba(255,255,255,0.88);
+}
+
+.gf-popup-title{ font-weight:700; margin-bottom:2px; }
+.gf-popup-meta{ font-size:12px; opacity:.85; margin-bottom:6px; }
+.gf-popup-venue{ margin-bottom:2px; }
+.gf-popup-location{ font-size:12px; opacity:.85; }
+.gf-popup-dates{ font-size:12px; opacity:.85; margin-top:6px; }
+
+.gf-popup-btn{
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:8px;
+  border:0;
+  background:#1B2432;   /* GunMetal */
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.gf-popup-btn:hover{ filter:brightness(1.05); }
+
+/* ---------- Custom cursor (desktop/trackpad only) ---------- */
+@media (pointer: fine) {
+  /* Default cursor for the whole page */
+  html, body {
+    cursor: url("/cursor.png") 10 4, auto;
+  }
+
+  /* Clickables: keep “pointer” semantics but use the same image */
+  a, button, [role="button"], label, summary, .clickable {
+    cursor: url("/cursor.png") 10 4, pointer;
+  }
+
+  /* Let text inputs keep the I-beam for usability */
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="password"],
+  textarea {
+    cursor: text;
+  }
+
+  /* Don’t override the map’s own grab/grabbing cursors */
+  .maplibregl-canvas,
+  .maplibregl-canvas * {
+    cursor: auto !important;
+  }
+}
+>>>>>>> Stashed changes
