@@ -34,8 +34,18 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
   const markersRef = useRef<maplibregl.Marker[]>([]);
 
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
+    if (containerRef.current) {
+      containerRef.current.style.backgroundColor = "#1B2432"; // same as your water
+    }
 
+  const map = new maplibregl.Map({
+    container: containerRef.current!,
+    style: "https://demotiles.maplibre.org/style.json",
+    center: [-97.5, 31],
+    zoom: 6,
+  });
+
+<<<<<<< Updated upstream
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: "https://demotiles.maplibre.org/style.json",
@@ -51,6 +61,15 @@ export default function Map({ dataUrl = "/data/fallback-events.json" }: MapProps
         // clear old markers (hot reload safety)
         markersRef.current.forEach((m) => m.remove());
         markersRef.current = [];
+=======
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
+    mapRef.current = map;
+
+    const recolor = () => applyBaseColors(map, "#AD2831", "#1B2432"); // land, water
+    map.on("load", recolor);
+    map.on("styledata", recolor);
+    
+>>>>>>> Stashed changes
 
         events.forEach((ev) => {
           const el = document.createElement("button");

@@ -30,15 +30,26 @@ export default function GridFinderHelper() {
 
   return (
     <>
+<<<<<<< Updated upstream
       <button className={styles.fab} aria-label="Open GridFinder Helper" onClick={() => setOpen((v) => !v)}>
         💬
       </button>
+=======
+      <button
+  className={styles.fab}
+  aria-label="Open GridFinder Helper"
+  onClick={() => setOpen((v) => !v)}
+>
+  <img src="/helper.png" alt="" className={styles.fabIcon} />
+</button>
+
+>>>>>>> Stashed changes
 
       {open && (
         <div className={styles.chatbox}>
           <header className={styles.header}>
             <div className={styles.headerLeft}>
-              <img src="/logo.svg" alt="Logo" className={styles.logo} />
+              <img src="/tire and wrench.png" alt="Logo" className={styles.logo} />
               <h2 className={styles.title}>GridFinder Helper</h2>
             </div>
             <button className={styles.closeBtn} aria-label="Close chat" onClick={() => setOpen(false)}>×</button>

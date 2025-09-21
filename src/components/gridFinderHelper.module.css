@@ -17,13 +17,28 @@
   border-radius: 50%;
   width: 56px;
   height: 56px;
-  font-size: 1.5rem;
+  display: inline-flex;           /* center the image */
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease;
   z-index: 1000;
+  overflow: hidden;               /* just in case */
 }
+
 .fab:hover { transform: scale(1.05); }
+
+/* New: size the PNG inside the FAB */
+.fabIcon {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  pointer-events: none;           /* clicks go to the button */
+  /* If your icon is dark and you want it to appear white on the red circle, uncomment:
+     filter: invert(1) brightness(200%);
+  */
+}
 
 /* Panel */
 .chatbox {
@@ -72,11 +87,13 @@
 
 /* Input row */
 .inputArea {
+  color: var(--gf-red);
   display: flex;
   padding: 10px;
   border-top: 1px solid #ddd;
   background: #fff;
 }
+
 .inputArea input {
   flex: 1;
   border: 1px solid #ccc;
@@ -89,7 +106,7 @@
 .inputArea button {
   margin-left: 8px;
   background: var(--gf-red);
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 0 16px;
   border-radius: 20px;
