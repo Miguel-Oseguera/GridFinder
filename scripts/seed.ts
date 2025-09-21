@@ -1,6 +1,7 @@
 // scripts/seed.ts
 // scripts/seed.ts
 // scripts/seed.ts
+//hello
 import { createRequire } from 'module';
 import * as fs from 'fs';
 import * as path from 'path';
