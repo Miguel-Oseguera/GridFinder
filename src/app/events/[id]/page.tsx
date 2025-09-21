@@ -51,7 +51,7 @@ async function loadEvent(id: string): Promise<EventItem | null> {
 
   // 2) JSON fallback
   const base = await getBaseUrl();
-  const res = await fetch(`${base}/data/fallback-events.json`, {
+  const res = await fetch(`${base}/api/events`, {
     cache: "no-store", // always latest dummy data
   });
   if (!res.ok) return null;
@@ -62,7 +62,7 @@ async function loadEvent(id: string): Promise<EventItem | null> {
 /** Load a few “recommended” events from JSON (exclude current id). */
 async function loadRecommended(current: EventItem): Promise<EventItem[]> {
   const base = await getBaseUrl();
-  const res = await fetch(`${base}/data/fallback-events.json`, { cache: "no-store" });
+  const res = await fetch(`${base}/api/events`, { cache: "no-store" });
   if (!res.ok) return [];
   const all = (await res.json()) as EventItem[];
 

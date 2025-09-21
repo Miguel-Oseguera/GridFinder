@@ -20,7 +20,7 @@ async function firstEventId(): Promise<string | null> {
   // Fallback to bundled JSON during scaffolding
   const host = headers().get("host") ?? "localhost:3000";
   const base = `${protoFor(host)}://${host}`;
-  const res = await fetch(`${base}/data/fallback-events.json`, { cache: "no-store" }).catch(() => null);
+  const res = await fetch(`${base}/api/events`, { cache: "no-store" }).catch(() => null);
   if (!res || !res.ok) return null;
   const list = (await res.json()) as FallbackEvent[];
   return list?.[0]?.id ?? null;

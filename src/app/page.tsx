@@ -17,8 +17,12 @@ export default function Home() {
 
   // Load distinct event types from your dataset
   useEffect(() => {
-    fetch("/data/fallback-events.json")
-      .then((r) => r.json())
+    // load distinct event types from server (instead of the local JSON)
+    fetch('/api/events')
+      .then((r) => {
+        if (!r.ok) throw new Error('Failed to load events');
+        return r.json();
+      })
       .then((events: Array<{ type?: string }>) => {
         const types = Array.from(
           new Set(events.map((e) => e.type).filter(Boolean) as string[])
@@ -27,7 +31,8 @@ export default function Home() {
         setSelectedTypes(types); // show all by default
       })
       .catch(() => {
-        const types = ["karting", "HPDE", "club racing"];
+        // fallback if server fails
+        const types = ['karting', 'HPDE', 'club racing'];
         setAvailableTypes(types);
         setSelectedTypes(types);
       });
@@ -252,7 +257,7 @@ export default function Home() {
             </div>
             <div className="relative [transform:none]">
               <Map
-                dataUrl="/data/fallback-events.json"
+                dataUrl="/api/events"
                 filters={{ types: selectedTypes, beginnerOnly, query, sortKey }}
               />
             </div>

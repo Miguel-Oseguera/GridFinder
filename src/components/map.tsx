@@ -112,7 +112,7 @@ function buildLayerFilter(filters?: MapFilters): any | null {
   return parts.length > 1 ? (parts as any) : null;
 }
 
-export default function Map({ dataUrl = "/data/fallback-events.json", filters }: MapProps) {
+export default function Map({ dataUrl = "/api/events", filters }: MapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
