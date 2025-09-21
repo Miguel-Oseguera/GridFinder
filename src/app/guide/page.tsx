@@ -1,4 +1,3 @@
-// src/app/guide/page.tsx
 import Link from "next/link";
 import Image from "next/image";
 
@@ -18,10 +17,10 @@ const ext = (href: string, label: string) => (
 );
 
 const GEAR: Array<{ label: string; img?: string }> = [
-  { label: "Helmet", img: "/helmet.png" }, // place helmet.png in /public
-  { label: "Gloves" },
-  { label: "Shoes" },
-  { label: "Suit" },
+  { label: "Helmet", img: "/helmet.png" },
+  { label: "Gloves", img: "/gloves.png" },
+  { label: "Shoes", img: "/shoes.png" },
+  { label: "Suit", img: "/suit.png" },
 ];
 
 export default function GuidePage() {
@@ -45,11 +44,10 @@ export default function GuidePage() {
             abrasion-resistant jacket and pants, plus shoes with a thin sole for pedal feel.
           </p>
 
-          {/* 4 tiles; first shows the helmet image (no red border) */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {GEAR.map(({ label, img }) => (
               <div key={label} className="space-y-2">
-                <div className="relative grid aspect-video place-items-center rounded-xl bg-black/10 overflow-hidden">
+                <div className="relative grid aspect-video place-items-center rounded-xl bg-black/0 overflow-hidden">
                   {img ? (
                     <Image
                       src={img}
@@ -74,23 +72,22 @@ export default function GuidePage() {
           <h2 className="sigmar-regular text-2xl md:text-3xl">Helpful Links</h2>
           <h3 className="mt-2 text-lg font-semibold">Quick Links for New Karters</h3>
 
-          {/* Find Events & Tracks */}
-          <div className="mt-2">
-            <h4 className="font-semibold text-white">Find Events &amp; Tracks</h4>
+          {/* Categories */}
+          <div>
+            <h4 className="font-semibold text-white">Find Events & Tracks</h4>
             <ul className="list-disc list-inside space-y-1">
               <li>
                 <Link href="/events" className="text-[var(--gf-red)] hover:underline">
                   Find a track near you
                 </Link>{" "}
-                <span className="text-white/60">(opens the events/map)</span>
+                <span className="text-white/60">(opens the events page)</span>
               </li>
               <li>{ext("https://www.motorsportreg.com/", "MotorsportReg – karting events")}</li>
             </ul>
           </div>
 
-          {/* Rules & Safety */}
           <div>
-            <h4 className="font-semibold text-white">Rules &amp; Safety</h4>
+            <h4 className="font-semibold text-white">Rules & Safety</h4>
             <ul className="list-disc list-inside space-y-1">
               <li>{ext("https://www.fiakarting.com/", "FIA Karting (regs & flags)")}</li>
               <li>{ext("https://www.snell.org/", "Snell helmet standards")}</li>
@@ -98,18 +95,16 @@ export default function GuidePage() {
             </ul>
           </div>
 
-          {/* Learn & Improve */}
           <div>
-            <h4 className="font-semibold text-white">Learn &amp; Improve</h4>
+            <h4 className="font-semibold text-white">Learn & Improve</h4>
             <ul className="list-disc list-inside space-y-1">
               <li>{ext("https://tkart.it/", "TKART How-to & setup")}</li>
               <li>{ext("https://forums.kartpulse.com/", "KartPulse forum")}</li>
             </ul>
           </div>
 
-          {/* Classes & Engines */}
           <div>
-            <h4 className="font-semibold text-white">Classes &amp; Engines</h4>
+            <h4 className="font-semibold text-white">Classes & Engines</h4>
             <ul className="list-disc list-inside space-y-1">
               <li>{ext("https://www.briggsracing.com/", "Briggs LO206")}</li>
               <li>{ext("https://www.iamekarting.com/", "IAME (X30/KA100)")}</li>
@@ -117,7 +112,6 @@ export default function GuidePage() {
             </ul>
           </div>
 
-          {/* Series / Governing Bodies */}
           <div>
             <h4 className="font-semibold text-white">Series / Governing Bodies</h4>
             <ul className="list-disc list-inside space-y-1">
@@ -131,7 +125,6 @@ export default function GuidePage() {
             </ul>
           </div>
 
-          {/* Vendors */}
           <div>
             <h4 className="font-semibold text-white">Vendors</h4>
             <ul className="list-disc list-inside space-y-1">
@@ -141,13 +134,24 @@ export default function GuidePage() {
             </ul>
           </div>
 
-          {/* Essentials */}
           <div>
             <h4 className="font-semibold text-white">Essentials</h4>
             <ul className="list-disc list-inside space-y-1">
-              <li><a href="#" className="text-[var(--gf-red)] hover:underline">First-day checklist (PDF)</a></li>
-              <li><a href="#" className="text-[var(--gf-red)] hover:underline">Starter budget (article)</a></li>
-              <li><a href="#" className="text-[var(--gf-red)] hover:underline">Transport &amp; tools (article)</a></li>
+              <li>
+                <a href="#" className="text-[var(--gf-red)] hover:underline">
+                  First-day checklist (PDF)
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-[var(--gf-red)] hover:underline">
+                  Starter budget (article)
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-[var(--gf-red)] hover:underline">
+                  Transport & tools (article)
+                </a>
+              </li>
             </ul>
           </div>
         </section>

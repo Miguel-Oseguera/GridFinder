@@ -84,6 +84,9 @@
   padding: 10px 14px;
   font-size: 0.95rem;
   outline: none;
+
+  color: var(--gf-bot-text);        /* makes typed text dark */
+  caret-color: var(--gf-red);
 }
 .inputArea input:focus { border-color: var(--gf-red); }
 .inputArea button {
