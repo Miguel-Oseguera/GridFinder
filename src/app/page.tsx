@@ -15,12 +15,11 @@ export default function Home() {
   const [sortKey, setSortKey] = useState<SortKey>("dateAsc");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Load distinct event types from your dataset
+  // Load distinct event types from the backend (API falls back to JSON if DB unavailable)
   useEffect(() => {
-    // load distinct event types from server (instead of the local JSON)
-    fetch('/api/events')
+    fetch("/api/events")
       .then((r) => {
-        if (!r.ok) throw new Error('Failed to load events');
+        if (!r.ok) throw new Error("Failed to load events");
         return r.json();
       })
       .then((events: Array<{ type?: string }>) => {
@@ -31,8 +30,7 @@ export default function Home() {
         setSelectedTypes(types); // show all by default
       })
       .catch(() => {
-        // fallback if server fails
-        const types = ['karting', 'HPDE', 'club racing'];
+        const types = ["karting", "HPDE", "club racing"];
         setAvailableTypes(types);
         setSelectedTypes(types);
       });
@@ -137,7 +135,7 @@ export default function Home() {
                     <div className="text-sm font-semibold">Filters</div>
                     <button
                       onClick={resetAll}
-                      className="text-xs px-2 py-1 rounded bg_black/5 hover:bg-black/10"
+                      className="text-xs px-2 py-1 rounded bg-black/5 hover:bg-black/10"
                       title="Reset filters & sort"
                     >
                       Reset
@@ -292,21 +290,21 @@ export default function Home() {
       <section className="mx-auto w-full max-w-6xl px-4 pb-16">
         <div className="bg-[#1b2432] rounded-xl p-6 md:p-8 mb-8">
           <h2 className="sigmar-regular text-2xl md:text-3xl mb-3">ABOUT GRIDFINDER</h2>
-          <p className="text-sm md:text-base leading-relaxed text:white/85">
+          <p className="text-sm md:text-base leading-relaxed text-white/85">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
           </p>
         </div>
 
         <div className="bg-[#1b2432] rounded-xl p-6 md:p-8 mb-8">
           <h2 className="sigmar-regular text-2xl md:text-3xl mb-3">BLAHBLAHBlAH</h2>
-          <p className="text-sm md:text-base leading-relaxed text:white/85">
+          <p className="text-sm md:text-base leading-relaxed text-white/85">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit.
           </p>
         </div>
 
         <div className="bg-[#1b2432] rounded-xl p-6 md:p-8 mb-10">
           <h2 className="sigmar-regular text-2xl md:text-3xl mb-3">CONTACT US</h2>
-          <p className="text-sm md:text-base leading-relaxed text:white/85">
+          <p className="text-sm md:text-base leading-relaxed text-white/85">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
           </p>
         </div>

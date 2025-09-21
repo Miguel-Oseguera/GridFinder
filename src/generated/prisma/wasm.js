@@ -92,9 +92,62 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.TrackScalarFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  title: 'title',
+  org: 'org',
+  type: 'type',
+  beginnerFriendly: 'beginnerFriendly',
+  venue: 'venue',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  city: 'city',
+  region: 'region',
+  country: 'country',
+  url: 'url',
+  sanctioned: 'sanctioned',
+  source: 'source',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EventScalarFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  trackId: 'trackId',
+  title: 'title',
+  type: 'type',
+  beginnerFriendly: 'beginnerFriendly',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  time: 'time',
+  img: 'img',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  url: 'url'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
-
+  Track: 'Track',
+  Event: 'Event'
 };
 /**
  * Create the Client
@@ -107,7 +160,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/reese/Desktop/projects/GridFinder/src/generated/prisma",
+      "value": "/root/GridFinder/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -116,12 +169,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/reese/Desktop/projects/GridFinder/prisma/schema.prisma",
+    "sourceFilePath": "/root/GridFinder/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -135,6 +188,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -143,13 +197,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n",
-  "inlineSchemaHash": "f4defb510352aeb258e32fd0e4e744b44176032e921a554a415dd34c135bd53c",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Track {\n  id               String   @id @default(cuid())\n  externalId       String? // external id for import matching (optional)\n  title            String\n  org              String?\n  type             String?\n  beginnerFriendly Boolean? // true/false for beginner friendly\n  venue            String?\n  latitude         Float? // Decimal coordinates\n  longitude        Float? // Decimal coordinates\n  city             String?\n  region           String? // State/province\n  country          String?\n  url              String? // Website URL\n  sanctioned       Boolean? // true/false for sanctioned status\n  source           String? // Where the data came from\n  image            String? // URL to image\n  events           Event[]\n  createdAt        DateTime @default(now())\n  updatedAt        DateTime @updatedAt\n\n  @@unique([source, externalId], name: \"source_externalId\")\n}\n\nmodel Event {\n  id               String    @id @default(cuid())\n  externalId       String?   @unique // store JSON event_id\n  trackId          String\n  title            String\n  type             String\n  beginnerFriendly Boolean\n  startDate        DateTime?\n  endDate          DateTime?\n  time             String?\n  img              String?\n  track            Track     @relation(fields: [trackId], references: [id], onDelete: Cascade)\n  createdAt        DateTime  @default(now())\n  updatedAt        DateTime  @updatedAt\n  url              String?\n}\n",
+  "inlineSchemaHash": "0afa988664e5b58587cc2d0ed3350681d0f1f77dfcb971e7fec9725332e05ed4",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Track\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"externalId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"org\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"beginnerFriendly\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"venue\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"latitude\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"longitude\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"region\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"country\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sanctioned\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"events\",\"kind\":\"object\",\"type\":\"Event\",\"relationName\":\"EventToTrack\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Event\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"externalId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"trackId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"beginnerFriendly\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"time\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"img\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"track\",\"kind\":\"object\",\"type\":\"Track\",\"relationName\":\"EventToTrack\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

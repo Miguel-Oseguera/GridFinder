@@ -120,9 +120,62 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.TrackScalarFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  title: 'title',
+  org: 'org',
+  type: 'type',
+  beginnerFriendly: 'beginnerFriendly',
+  venue: 'venue',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  city: 'city',
+  region: 'region',
+  country: 'country',
+  url: 'url',
+  sanctioned: 'sanctioned',
+  source: 'source',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EventScalarFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  trackId: 'trackId',
+  title: 'title',
+  type: 'type',
+  beginnerFriendly: 'beginnerFriendly',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  time: 'time',
+  img: 'img',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  url: 'url'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
-
+  Track: 'Track',
+  Event: 'Event'
 };
 
 /**

@@ -1,3 +1,4 @@
+// src/app/events/[id]/page.tsx
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
@@ -32,34 +33,63 @@ async function getBaseUrl() {
   return `${proto}://${host}`;
 }
 
-/** Try Prisma first; if missing or not found, read from the JSON file by ID */
+/** Map a Prisma Event (with .track included) to our EventItem shape. */
+function mapDbEventToEventItem(row: any): EventItem | null {
+  const lat = row?.track?.latitude ?? null;
+  const lng = row?.track?.longitude ?? null;
+  if (typeof lat !== "number" || typeof lng !== "number") return null;
+
+  return {
+    id: String(row.id),
+    title: row.title ?? "(untitled event)",
+    org: row.track?.org ?? undefined,
+    type: row.type ?? undefined,
+    beginnerFriendly: row.beginnerFriendly ?? undefined,
+    start: row.startDate ? new Date(row.startDate).toISOString() : undefined,
+    end: row.endDate ? new Date(row.endDate).toISOString() : undefined,
+    venue: row.track?.title ?? undefined,
+    lat,
+    lng,
+    city: row.track?.city ?? undefined,
+    region: row.track?.region ?? undefined,
+    country: row.track?.country ?? undefined,
+    registerUrl: row.url ?? row.track?.url ?? undefined,
+    sanctioned: row.track?.sanctioned ?? undefined,
+    source: "db",
+  };
+}
+
+/** Try Prisma first; if missing or not found, read from the API JSON and find by ID. */
 async function loadEvent(id: string): Promise<EventItem | null> {
   const decoded = decodeURIComponent(id);
 
-  // 1) Optional DB (Prisma) — safe dynamic import
+  // 1) DB (optional) — dynamic import so the page still runs without Prisma locally
   try {
     const mod = (await import("@/lib/prisma").catch(() => null)) as
       | { prisma?: any }
       | null;
+
     if (mod?.prisma) {
-      const ev = await mod.prisma.event.findUnique({ where: { id: decoded } });
-      if (ev) return ev as EventItem;
+      const row = await mod.prisma.event.findUnique({
+        where: { id: decoded },
+        include: { track: true },
+      });
+      const mapped = row && mapDbEventToEventItem(row);
+      if (mapped) return mapped;
     }
   } catch {
-    // ignore and fall back to JSON
+    // ignore and fall through to API fallback
   }
 
-  // 2) JSON fallback
+  // 2) Fallback: fetch from your API and pick the one with this id
   const base = await getBaseUrl();
-  const res = await fetch(`${base}/api/events`, {
-    cache: "no-store", // always latest dummy data
-  });
+  const res = await fetch(`${base}/api/events`, { cache: "no-store" });
   if (!res.ok) return null;
   const list = (await res.json()) as EventItem[];
   return list.find((e) => e.id === decoded) ?? null;
 }
 
-/** Load a few “recommended” events from JSON (exclude current id). */
+/** Load a few “recommended” events via API (exclude current id). */
 async function loadRecommended(current: EventItem): Promise<EventItem[]> {
   const base = await getBaseUrl();
   const res = await fetch(`${base}/api/events`, { cache: "no-store" });
@@ -67,7 +97,9 @@ async function loadRecommended(current: EventItem): Promise<EventItem[]> {
   const all = (await res.json()) as EventItem[];
 
   // Prefer same type; if not enough, fill from same region; else anything.
-  const sameType = all.filter((e) => e.id !== current.id && e.type && e.type === current.type);
+  const sameType = all.filter(
+    (e) => e.id !== current.id && e.type && e.type === current.type
+  );
   if (sameType.length >= 3) return sameType.slice(0, 3);
 
   const pool = new Map<string, EventItem>();
@@ -83,7 +115,6 @@ async function loadRecommended(current: EventItem): Promise<EventItem[]> {
   );
   sameRegion.slice(0, 3 - pool.size).forEach((e) => pool.set(e.id, e));
 
-  // Fill remaining slots
   for (const e of all) {
     if (e.id === current.id) continue;
     if (pool.size >= 3) break;
@@ -119,7 +150,12 @@ export default async function EventById({
           </h1>
           {(ev.org || ev.type || ev.beginnerFriendly || ev.sanctioned) && (
             <p className="mt-1 text-sm text-white/80">
-              {[ev.org, ev.type, ev.beginnerFriendly ? "Beginner-friendly" : "", ev.sanctioned ? "Sanctioned" : ""]
+              {[
+                ev.org,
+                ev.type,
+                ev.beginnerFriendly ? "Beginner-friendly" : "",
+                ev.sanctioned ? "Sanctioned" : "",
+              ]
                 .filter(Boolean)
                 .join(" · ")}
             </p>
@@ -132,9 +168,7 @@ export default async function EventById({
           <div className="md:col-span-2 space-y-3">
             {ev.venue && (
               <p>
-                <span className="text-[var(--gf-red)] font-semibold">
-                  Venue:
-                </span>{" "}
+                <span className="text-[var(--gf-red)] font-semibold">Venue:</span>{" "}
                 <span>{ev.venue}</span>
               </p>
             )}
@@ -152,9 +186,7 @@ export default async function EventById({
 
             {(ev.start || ev.end) && (
               <p>
-                <span className="text-[var(--gf-red)] font-semibold">
-                  When:
-                </span>{" "}
+                <span className="text-[var(--gf-red)] font-semibold">When:</span>{" "}
                 <span>
                   {ev.start ? fmt(ev.start) : ""}
                   {ev.end ? ` – ${fmt(ev.end)}` : ""}
@@ -162,7 +194,7 @@ export default async function EventById({
               </p>
             )}
 
-            {(typeof ev.lat === "number" && typeof ev.lng === "number") && (
+            {typeof ev.lat === "number" && typeof ev.lng === "number" && (
               <p>
                 <span className="text-[var(--gf-red)] font-semibold">
                   Coords:

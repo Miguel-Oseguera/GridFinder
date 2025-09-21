@@ -14,7 +14,7 @@ If relevant facts are missing, say briefly that you don’t have that info.
 Formatting rules:
 - If the user asks about events, reply as a short bullet list:
   - **Title** — {dates}; {venue}, {city}{, region}
-    [Details](/events/{id})${" "}•${" "}[Register]({registerUrl, if present})
+    [Details](/events/{id}) • [Register]({registerUrl, if present})
 - If nothing relevant is found, reply: "I couldn’t find that in the site data."
 Keep it concise, friendly, and avoid speculation.
 `;
@@ -30,14 +30,14 @@ export async function POST(req: NextRequest) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // Load our in-memory knowledge (events JSON, etc.)
+    // Load/refresh in-memory website knowledge (events JSON, etc.)
     await ensureKnowledgeLoaded(genAI);
 
     // Use the latest user message for retrieval
     const userMsg = messages[messages.length - 1]?.content ?? "";
     const hits = await retrieve(genAI, userMsg, 6);
 
-    // Build compact context (the retriever already includes id, title, venue, city, region, country, register)
+    // Compact grounding context
     const context = hits.map((h, i) => `[#${i + 1}] ${h.url ?? ""}\n${h.text}`).join("\n\n");
 
     // Map chat history roles
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       systemInstruction: SYSTEM_INSTRUCTION,
     });
 
-    // Prepend context before the conversation
+    // Prepend context to the conversation
     const result = await model.generateContent({
       contents: [
         { role: "user", parts: [{ text: `Website context:\n${context || "(no relevant context found)"}` }] },
