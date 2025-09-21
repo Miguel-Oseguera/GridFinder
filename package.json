@@ -2,11 +2,11 @@
   "name": "gridfinder",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
+    "seed": "ts-node scripts/seed.ts",
+    "db:reset": "npx prisma migrate reset",
+    "db:push": "npx prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
@@ -33,6 +33,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

@@ -13,3 +13,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+  model Track {
+  id               String   @id @default(cuid())
+    externalId       String?  // external id for import matching (optional)
+  title            String
+  org              String?
+  type             String?     
+  beginnerFriendly Boolean?    // true/false for beginner friendly
+  venue            String?
+  latitude         Float?      // Decimal coordinates
+  longitude        Float?      // Decimal coordinates
+  city             String?
+  region           String?     // State/province
+  country          String?
+  url              String?     // Website URL
+  sanctioned       Boolean?    // true/false for sanctioned status
+  source           String?     // Where the data came from
+  image            String?     // URL to image
+  events           Event[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([source, externalId], name: "source_externalId")
+}
+
+
+model Event {
+  id               String   @id @default(cuid())
+  externalId       String?  @unique          // store JSON event_id
+  trackId          String
+  title            String
+  type             String
+  beginnerFriendly Boolean
+  startDate        DateTime?
+  endDate          DateTime?
+  time             String?
+  img              String?
+  track            Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  url              String?
+
+  
+}
